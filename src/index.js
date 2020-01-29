@@ -30,7 +30,9 @@ function returnFirstArgument(param) {
  Пример:
    sumWithDefaults(10) вернет 110
  */
-function sumWithDefaults(a, b) {}
+function sumWithDefaults(a, b = 100) {
+    return a + b;
+}
 
 /*
  Задание 3:
