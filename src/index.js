@@ -90,10 +90,8 @@ function slice(array, from = 0, to = array.length) {
  */
 function createProxy(obj) {
     return new Proxy(obj, {
-        get(target, prop) {
-            return target[prop];
-        },
-        set(target, prop, value) {
+        get: (target, prop) => target[prop],
+        set: (target, prop, value) => {
             target[prop] = value ** 2;
 
             return true;
