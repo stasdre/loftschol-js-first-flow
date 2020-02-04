@@ -34,7 +34,17 @@ function map(array, fn) {
  Напишите аналог встроенного метода reduce для работы с массивами
  Посмотрите как работает reduce и повторите это поведение для массива, который будет передан в параметре array
  */
-function reduce(array, fn, initial) {}
+function reduce(array, fn, initial) {
+    let start = initial === undefined ? 1 : 0;
+
+    initial = initial === undefined ? array[0] : initial;
+
+    for (let i = start; i < array.length; i++) {
+        initial = fn(initial, array[i], i, array);
+    }
+
+    return initial;
+}
 
 /*
  Задание 4:
