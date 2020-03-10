@@ -27,8 +27,33 @@ const homeworkContainer = document.querySelector('#homework-container');
    homeworkContainer.appendChild(newDiv);
  */
 function createDiv() {
+    const div = document.createElement('div');
+
+    div.classList.add('draggable-div');
+
+    div.style.height = getRandomVal(10, 500) + 'px';
+    div.style.width = getRandomVal(10, 500) + 'px';
+    div.style.position = 'absolute';
+    div.style.top = getRandomVal(0, 500) + 'px';
+    div.style.left = getRandomVal(0, 500) + 'px';
+    div.style.background = getRandomColor();
+
+    div.dataset.drag = 'draggable';
+
+    return div;
 }
 
+function getRandomVal(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function getRandomColor() {
+    const r = getRandomVal(0, 255);
+    const g = getRandomVal(0, 255);
+    const b = getRandomVal(0, 255);
+
+    return `rgb(${r}, ${g}, ${b})`;
+}
 /*
  Функция должна добавлять обработчики событий для перетаскивания элемента при помощи drag and drop
 
@@ -38,11 +63,12 @@ function createDiv() {
    addListeners(newDiv);
  */
 function addListeners(target) {
+    return target;
 }
 
 let addDivButton = homeworkContainer.querySelector('#addDiv');
 
-addDivButton.addEventListener('click', function() {
+addDivButton.addEventListener('click', function () {
     // создать новый div
     const div = createDiv();
 
@@ -53,6 +79,38 @@ addDivButton.addEventListener('click', function() {
     // можно не назначать обработчики событий каждому div в отдельности, а использовать делегирование
     // или использовать HTML5 D&D - https://www.html5rocks.com/ru/tutorials/dnd/basics/
 });
+
+homeworkContainer.onmousedown = e => {
+    let elem = e.target;
+
+    if (elem.dataset.drag != 'draggable') {
+        return;
+    }
+
+    let zIndex = elem.style.zIndex;
+    let elemDataStyles = elem.getBoundingClientRect();
+    let shiftX = e.pageX - (elemDataStyles.left + window.pageXOffset);
+    let shiftY = e.pageY - (elemDataStyles.top + window.pageYOffset);
+
+    elem.style.left = e.pageX - shiftX + 'px';
+    elem.style.top = e.pageY - shiftY + 'px';
+
+    elem.style.zIndex = 1000;
+
+    document.onmousemove = e => {
+        elem.style.left = e.pageX - shiftX + 'px';
+        elem.style.top = e.pageY - shiftY + 'px';
+    };
+
+    document.onmouseup = () => {
+        document.onmousemove = null;
+        elem.style.zIndex = zIndex;
+    };
+};
+
+document.ondragstart = () => {
+    return false;
+};
 
 export {
     createDiv
